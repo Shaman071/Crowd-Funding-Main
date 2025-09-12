@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Heart, Users, Calendar, ArrowRight, Star } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -24,6 +24,9 @@ interface ProjectCardProps {
 const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
   const progressPercentage = Math.min((project.raised / project.goal) * 100, 100);
 
+  // 👇 State to track liked/unliked
+  const [liked, setLiked] = useState(false);
+
   return (
     <motion.div
       className="bg-white rounded-2xl shadow-lg overflow-hidden card-hover relative"
@@ -47,8 +50,15 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
           className="w-full h-48 object-cover"
         />
         <div className="absolute top-4 right-4">
-          <button className="p-2 bg-white/90 backdrop-blur-sm rounded-full hover:bg-white transition-colors group">
-            <Heart className="h-5 w-5 text-gray-600 group-hover:text-red-500 transition-colors" />
+          <button
+            onClick={() => setLiked(!liked)}
+            className="p-2 bg-white/90 backdrop-blur-sm rounded-full hover:bg-white transition-colors group"
+          >
+            <Heart
+              className={`h-5 w-5 transition-colors ${
+                liked ? 'text-red-500 fill-red-500' : 'text-gray-600 group-hover:text-red-500'
+              }`}
+            />
           </button>
         </div>
         <div className="absolute bottom-4 left-4">
@@ -76,7 +86,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
           </div>
           <div className="w-full bg-gray-200 rounded-full h-2">
             <motion.div
-              className="progress-bar h-2 rounded-full"
+              className="progress-bar h-2 rounded-full bg-green-500"
               initial={{ width: 0 }}
               animate={{ width: `${progressPercentage}%` }}
               transition={{ duration: 1, delay: 0.2 }}

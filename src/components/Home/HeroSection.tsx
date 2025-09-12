@@ -1,7 +1,8 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { ArrowRight, Play, TrendingUp, Users, Zap } from 'lucide-react';
+import { ArrowRight, TrendingUp, Users, Zap } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import VideoPlayer from './VideoPlayer'; // 👈 import your video component
 
 const HeroSection = () => {
   return (
@@ -54,14 +55,11 @@ const HeroSection = () => {
               <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
             </Link>
             
-            <button className="group flex items-center space-x-2 text-gray-600 hover:text-blue-600 transition-colors">
-              <div className="bg-white p-3 rounded-full shadow-lg group-hover:shadow-xl transition-shadow">
-                <Play className="h-6 w-6" />
-              </div>
-              <span className="font-medium">Watch How It Works</span>
-            </button>
+            {/* 👇 Replace button with VideoPlayer */}
+            <VideoPlayer />
           </motion.div>
 
+          {/* Features grid remains unchanged */}
           <motion.div
             className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto"
             initial={{ opacity: 0, y: 50 }}

@@ -12,11 +12,34 @@ const ProjectDetailPage = () => {
   const [selectedReward, setSelectedReward] = useState<any>(null);
   const [activeTab, setActiveTab] = useState('story');
 
+  // New states for icons
+  const [liked, setLiked] = useState(false);
+  const [flagged, setFlagged] = useState(false);
+
+  const handleShare = async () => {
+    const url = window.location.href;
+    try {
+      if (navigator.share) {
+        await navigator.share({
+          title: project.title,
+          text: project.description,
+          url,
+        });
+      } else {
+        await navigator.clipboard.writeText(url);
+        alert('Project link copied to clipboard!');
+      }
+    } catch (err) {
+      console.error('Share failed:', err);
+    }
+  };
+
   // Mock project data
   const project = {
     id: 1,
     title: 'EcoTech Water Purifier',
-    description: 'Revolutionary water purification system using solar energy and AI optimization to provide clean drinking water for communities worldwide.',
+    description:
+      'Revolutionary water purification system using solar energy and AI optimization to provide clean drinking water for communities worldwide.',
     longDescription: `
       <h3>The Problem</h3>
       <p>Over 2 billion people worldwide lack access to safely managed drinking water at home. Traditional water purification systems are expensive, energy-intensive, and often require complex maintenance.</p>
@@ -33,7 +56,8 @@ const ProjectDetailPage = () => {
         <li>Scalable for communities of all sizes</li>
       </ul>
     `,
-    image: 'https://images.pexels.com/photos/1586973/pexels-photo-1586973.jpeg?auto=compress&cs=tinysrgb&w=1200',
+    image:
+      'https://images.pexels.com/photos/1586973/pexels-photo-1586973.jpeg?auto=compress&cs=tinysrgb&w=1200',
     category: 'Technology',
     raised: 85000,
     goal: 100000,
@@ -41,7 +65,8 @@ const ProjectDetailPage = () => {
     daysLeft: 12,
     creator: {
       name: 'Dr. Sarah Chen',
-      avatar: 'https://images.pexels.com/photos/3785077/pexels-photo-3785077.jpeg?auto=compress&cs=tinysrgb&w=200',
+      avatar:
+        'https://images.pexels.com/photos/3785077/pexels-photo-3785077.jpeg?auto=compress&cs=tinysrgb&w=200',
       bio: 'Environmental Engineer with 15+ years experience in water purification technology',
       projects: 3,
     },
@@ -114,14 +139,34 @@ const ProjectDetailPage = () => {
                   {project.category}
                 </span>
                 <div className="flex items-center space-x-2 ml-auto">
-                  <button className="p-2 text-gray-600 hover:text-red-500 transition-colors">
-                    <Heart className="h-5 w-5" />
+                  {/* Heart (Like) */}
+                  <button onClick={() => setLiked(!liked)} className="p-2 transition-colors">
+                    <Heart
+                      className={`h-5 w-5 ${
+                        liked
+                          ? 'text-red-500 fill-red-500'
+                          : 'text-gray-600 hover:text-red-500'
+                      }`}
+                    />
                   </button>
-                  <button className="p-2 text-gray-600 hover:text-blue-500 transition-colors">
+
+                  {/* Share */}
+                  <button
+                    onClick={handleShare}
+                    className="p-2 text-gray-600 hover:text-blue-500 transition-colors"
+                  >
                     <Share2 className="h-5 w-5" />
                   </button>
-                  <button className="p-2 text-gray-600 hover:text-orange-500 transition-colors">
-                    <Flag className="h-5 w-5" />
+
+                  {/* Flag (Report) */}
+                  <button onClick={() => setFlagged(!flagged)} className="p-2 transition-colors">
+                    <Flag
+                      className={`h-5 w-5 ${
+                        flagged
+                          ? 'text-orange-500 fill-orange-500'
+                          : 'text-gray-600 hover:text-orange-500'
+                      }`}
+                    />
                   </button>
                 </div>
               </div>
@@ -137,7 +182,7 @@ const ProjectDetailPage = () => {
                 </div>
                 <div className="w-full bg-gray-200 rounded-full h-3">
                   <motion.div
-                    className="progress-bar h-3 rounded-full"
+                    className="progress-bar h-3 rounded-full bg-blue-600"
                     initial={{ width: 0 }}
                     animate={{ width: `${progressPercentage}%` }}
                     transition={{ duration: 1, delay: 0.2 }}
@@ -162,7 +207,9 @@ const ProjectDetailPage = () => {
                 </div>
                 <div className="text-center p-4 bg-gray-50 rounded-lg">
                   <Target className="h-6 w-6 text-orange-600 mx-auto mb-2" />
-                  <div className="text-2xl font-bold text-gray-900">{Math.round(progressPercentage)}%</div>
+                  <div className="text-2xl font-bold text-gray-900">
+                    {Math.round(progressPercentage)}%
+                  </div>
                   <div className="text-sm text-gray-500">Funded</div>
                 </div>
               </div>
@@ -176,7 +223,9 @@ const ProjectDetailPage = () => {
                 />
                 <div>
                   <h4 className="font-semibold text-gray-900">{project.creator.name}</h4>
-                  <p className="text-sm text-gray-600">{project.creator.projects} projects created</p>
+                  <p className="text-sm text-gray-600">
+                    {project.creator.projects} projects created
+                  </p>
                 </div>
                 <button className="ml-auto bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors">
                   Contact Creator
@@ -233,7 +282,7 @@ const ProjectDetailPage = () => {
           <div className="space-y-6">
             <div className="bg-white rounded-2xl shadow-sm p-6">
               <h3 className="text-xl font-bold text-gray-900 mb-6">Support This Project</h3>
-              
+
               <div className="space-y-4">
                 {project.rewards.map((reward) => (
                   <div

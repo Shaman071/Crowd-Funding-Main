@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Heart, Users, Calendar, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -40,6 +40,17 @@ const FeaturedProjects = () => {
     },
   ];
 
+  // 👇 track liked state for each project
+  const [likedProjects, setLikedProjects] = useState<boolean[]>(
+    Array(projects.length).fill(false)
+  );
+
+  const toggleLike = (index: number) => {
+    setLikedProjects((prev) =>
+      prev.map((liked, i) => (i === index ? !liked : liked))
+    );
+  };
+
   return (
     <section className="py-20 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -79,8 +90,19 @@ const FeaturedProjects = () => {
                     {project.category}
                   </span>
                 </div>
-                <button className="absolute top-4 right-4 p-2 bg-white/90 backdrop-blur-sm rounded-full hover:bg-white transition-colors">
-                  <Heart className="h-5 w-5 text-gray-600 hover:text-red-500 transition-colors" />
+
+                {/* ❤️ Toggle Heart */}
+                <button
+                  onClick={() => toggleLike(index)}
+                  className="absolute top-4 right-4 p-2 bg-white/90 backdrop-blur-sm rounded-full hover:bg-white transition-colors"
+                >
+                  <Heart
+                    className={`h-5 w-5 transition-colors ${
+                      likedProjects[index]
+                        ? 'text-red-500 fill-red-500'
+                        : 'text-gray-600 hover:text-red-500'
+                    }`}
+                  />
                 </button>
               </div>
 
@@ -95,8 +117,10 @@ const FeaturedProjects = () => {
                   </div>
                   <div className="w-full bg-gray-200 rounded-full h-2">
                     <div
-                      className="progress-bar h-2 rounded-full"
-                      style={{ width: `${Math.min((project.raised / project.goal) * 100, 100)}%` }}
+                      className="progress-bar h-2 rounded-full bg-green-500"
+                      style={{
+                        width: `${Math.min((project.raised / project.goal) * 100, 100)}%`,
+                      }}
                     ></div>
                   </div>
                 </div>
