@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { ArrowRight, Play, TrendingUp, Users, Zap } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
+
 const HeroSection = () => {
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
